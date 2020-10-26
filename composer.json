@@ -4,7 +4,7 @@
     "description": "Full text search on Doctrine entities without external dependencies.",
     "license": "MIT",
     "homepage": "https://doc.whatwedo.ch/whatwedo/searchbundle",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Ueli Banholzer",
