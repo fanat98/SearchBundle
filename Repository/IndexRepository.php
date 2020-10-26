@@ -50,15 +50,18 @@ class IndexRepository extends ServiceEntityRepository
      */
     public function search($query, $entity = null, $field = null)
     {
+        $withoutWhitespacesQuery = str_replace(' ','', $query);
+
         $qb = $this->createQueryBuilder('i')
             ->select('i.foreignId')
             ->addSelect('MATCH_AGAINST(i.content, :query) AS _matchQuote')
-            ->where('MATCH_AGAINST(i.content, :query) > :minScore')
+            ->where('MATCH_AGAINST(i.content, :minScoreQuery) > :minScore')
             ->orWhere('i.content LIKE :queryWildcard')
             ->groupBy('i.foreignId')
             ->addGroupBy('_matchQuote')
             ->addOrderBy('_matchQuote', 'DESC')
             ->setParameter('query', $query)
+            ->setParameter('minScoreQuery', $withoutWhitespacesQuery)
             ->setParameter('queryWildcard', '%'.$query.'%')
             ->setParameter('minScore', round(\mb_strlen($query) * 0.8));
 
