@@ -50,7 +50,8 @@ class IndexRepository extends ServiceEntityRepository
      */
     public function search($query, $entity = null, $field = null)
     {
-        $withoutWhitespacesQuery = str_replace(' ','', $query);
+        //Replace all Whitespaces and dots
+        $withoutWhiteSpacesAndDotsQuery = preg_replace('/(\s+)|\./', '_', $query);
 
         $qb = $this->createQueryBuilder('i')
             ->select('i.foreignId')
@@ -61,7 +62,7 @@ class IndexRepository extends ServiceEntityRepository
             ->addGroupBy('_matchQuote')
             ->addOrderBy('_matchQuote', 'DESC')
             ->setParameter('query', $query)
-            ->setParameter('minScoreQuery', $withoutWhitespacesQuery)
+            ->setParameter('minScoreQuery', $withoutWhiteSpacesAndDotsQuery)
             ->setParameter('queryWildcard', '%'.$query.'%')
             ->setParameter('minScore', round(\mb_strlen($query) * 0.8));
 
